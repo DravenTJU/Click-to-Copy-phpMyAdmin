@@ -2,7 +2,7 @@
 // @name         phpMyAdmin一键复制
 // @namespace    https://github.com/DravenTJU/Click-to-Copy-phpMyAdmin
 // @source       git@github.com:DravenTJU/Click-to-Copy-phpMyAdmin.git
-// @version      1.0
+// @version      1.1
 // @description  为phpMyAdmin数据表添加一键复制功能
 // @author       Draven
 // @match        */phpmyadmin/*
@@ -83,6 +83,12 @@
 
     // 主函数
     function init() {
+        // 移除旧的复制按钮（如果存在）
+        const oldBtn = document.querySelector('.copy-btn');
+        if (oldBtn) {
+            oldBtn.remove();
+        }
+
         const copyBtn = createCopyButton();
         document.body.appendChild(copyBtn);
 
@@ -115,10 +121,40 @@
         });
     }
 
-    // 等待页面加载完成后初始化
+    // 创建 MutationObserver 监听数据表变化
+    function observeTableChanges() {
+        const observer = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                // 检查是否有新的 td[data-decimals] 元素添加
+                const hasNewDataCell = Array.from(mutation.addedNodes).some(node => {
+                    return node.nodeType === 1 && (
+                        node.matches('td[data-decimals]') ||
+                        node.querySelector('td[data-decimals]')
+                    );
+                });
+
+                if (hasNewDataCell) {
+                    init();
+                    break;
+                }
+            }
+        });
+
+        // 监听整个文档的变化
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    // 初始化
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            observeTableChanges();
+        });
     } else {
         init();
+        observeTableChanges();
     }
 })(); 
