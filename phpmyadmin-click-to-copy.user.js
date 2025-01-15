@@ -8,6 +8,7 @@
 // @match        */phpmyadmin/*
 // @match        */pma/*
 // @grant        GM_addStyle
+// @license      GPL-2.0
 // ==/UserScript==
 
 (function() {
