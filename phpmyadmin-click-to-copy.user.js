@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name         phpMyAdmin一键复制
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/DravenTJU/Click-to-Copy-phpMyAdmin
+// @source       git@github.com:DravenTJU/Click-to-Copy-phpMyAdmin.git
 // @version      1.0
 // @description  为phpMyAdmin数据表添加一键复制功能
 // @author       Draven
